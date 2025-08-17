@@ -14,28 +14,34 @@ class NovaQuotes extends Card
      */
     public $width = 'full';
 
-    protected $limit = 10;
+    protected $user = 'Guest';
 
-    public function __construct()
+    protected $description = '';
+
+    protected $greetings = 'Welcome';
+
+    protected $interval = 5;
+
+    public function render()
     {
-        parent::__construct();
-
-        $this->withMeta([
-            'slides' => $this->getSlides($this->limit),
+        return $this->withMeta([
+            'slides' => $this->getSlides(),
+            'refreshInterval' => $this->interval,
         ]);
     }
 
-    protected function getSlides($limit)
+    protected function getSlides()
     {
         return collect([
             [
                 'type' => 'welcome',
-                'name' => __('Welcome Back!').(auth()->user()->name ?? 'Guest'),
-                'title' => config('app.name', 'Laravel'),
+                'greetings' => $this->greetings,
+                'user' => $this->user,
+                'description' => $this->description,
                 'gradient' => 'linear-gradient(to right, #b92b27, #1565C0)',
             ],
         ])->merge(
-            Inspiring::getQuotesCollections($limit)->map(function ($quote) {
+            Inspiring::getQuotesCollections()->map(function ($quote) {
                 return [
                     'type' => 'quote',
                     'text' => $quote['text'],
@@ -43,13 +49,6 @@ class NovaQuotes extends Card
                 ];
             })
         )->toArray();
-    }
-
-    public function limitQuotes(int $limit): self
-    {
-        $this->limit = $limit;
-
-        return $this;
     }
 
     /**
@@ -60,9 +59,30 @@ class NovaQuotes extends Card
         return 'nova-quotes';
     }
 
-    public function refreshInterval(int $seconds = 15): self
+    public function refreshInterval(int $seconds): self
     {
-        $this->withMeta(['refreshInterval' => $seconds]);
+        $this->interval = $seconds;
+
+        return $this;
+    }
+
+    public function user(string $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function description(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function greetings(string $greetings): self
+    {
+        $this->greetings = $greetings;
 
         return $this;
     }

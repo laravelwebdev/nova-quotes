@@ -1417,14 +1417,14 @@ class Inspiring
         });
     }
 
-    public static function getQuotesCollections($limit)
+    public static function getQuotesCollections()
     {
         $allQuotes = collect(self::$quotes)
             ->flatMap(function ($category) {
                 return $category['quotes'];
             })
             ->shuffle()
-            ->take($limit)
+            ->take(10)
             ->map(function ($item) {
                 return [
                     'text' => $item['quote'],
