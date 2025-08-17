@@ -92,7 +92,6 @@ export default {
   width: 100%;
   min-height: 160px;
   color: #fff;
-  border-radius: 12px;
   overflow: hidden;
   transition: background 0.8s ease-in-out;
 }
