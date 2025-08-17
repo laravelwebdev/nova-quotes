@@ -21,21 +21,21 @@ class NovaQuotes extends Card
         parent::__construct();
 
         $this->withMeta([
-            'slides' => $this->getSlides(),
+            'slides' => $this->getSlides($this->limit),
         ]);
     }
 
-    protected function getSlides()
+    protected function getSlides($limit)
     {
         return collect([
             [
                 'type' => 'welcome',
-                'name' => auth()->user()->name ?? 'Guest',
-                'title' => 'Welcome to Laravel Nova',
+                'name' => __('Welcome Back!').(auth()->user()->name ?? 'Guest'),
+                'title' => config('app.name', 'Laravel'),
                 'gradient' => 'linear-gradient(to right, #b92b27, #1565C0)',
             ],
         ])->merge(
-            Inspiring::getQuotesCollections($this->limit)->map(function ($quote) {
+            Inspiring::getQuotesCollections($limit)->map(function ($quote) {
                 return [
                     'type' => 'quote',
                     'text' => $quote['text'],
@@ -45,7 +45,7 @@ class NovaQuotes extends Card
         )->toArray();
     }
 
-    public function limitQuotes(int $limit) : self
+    public function limitQuotes(int $limit): self
     {
         $this->limit = $limit;
 
@@ -58,5 +58,12 @@ class NovaQuotes extends Card
     public function component(): string
     {
         return 'nova-quotes';
+    }
+
+    public function refreshInterval(int $seconds = 15): self
+    {
+        $this->withMeta(['refreshInterval' => $seconds]);
+
+        return $this;
     }
 }

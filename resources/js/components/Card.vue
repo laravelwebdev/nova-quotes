@@ -10,7 +10,7 @@
             :class="slides[current].type"
           >
             <div v-if="slides[current].type === 'welcome'">
-              <h4>Hi, {{ slides[current].name }}</h4>
+              <h4>{{ slides[current].name }}</h4>
               <h2>{{ slides[current].title }}</h2>
             </div>
             <div v-else>
@@ -42,6 +42,7 @@ export default {
     return {
       current: 0,
       slides: this.card.slides || [],
+      interval: this.card.refreshInterval,
     };
   },
 
@@ -57,7 +58,7 @@ export default {
   mounted() {
     if (this.slides.length > 0) {
       this.show(0);
-      setInterval(() => this.show((this.current + 1) % this.slides.length), 5000);
+      setInterval(() => this.show((this.current + 1) % this.slides.length), 1000 * this.interval);
     }
   },
 
